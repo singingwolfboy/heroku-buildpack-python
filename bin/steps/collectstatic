@@ -6,16 +6,24 @@ indent() {
   [ $(uname) == "Darwin" ] && sed -l "$RE" || sed -u "$RE"
 }
 
+echo "--> entered collectstatic"
+
 MANAGE_FILE=$(find . -maxdepth 3 -type f -name 'manage.py' | head -1)
 MANAGE_FILE=${MANAGE_FILE:-fakepath}
+
+echo "--> manage file $MANAGE_FILE"
 
 [ -f .heroku/collectstatic_disabled ] && DISABLE_COLLECTSTATIC=1
 
 if [ ! "$DISABLE_COLLECTSTATIC" ] && [ -f "$MANAGE_FILE" ]; then
     set +e
 
+    echo "--> about to collectstatic"
+
     # Check if collectstatic is configured properly.
     python $MANAGE_FILE collectstatic --dry-run --noinput &> /dev/null && RUN_COLLECTSTATIC=true
+
+    echo "--> dry-run done; result = $RUN_COLLECTSTATIC"
 
     # Compile assets if collectstatic appears to be kosher.
     if [ "$RUN_COLLECTSTATIC" ]; then

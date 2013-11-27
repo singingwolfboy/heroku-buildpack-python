@@ -220,11 +220,14 @@ puts-step "Installing dependencies using Pip ($PIP_VERSION)"
 [ ! "$FRESH_PYTHON" ] && bpwatch stop pip_install
 [ "$FRESH_PYTHON" ] && bpwatch stop pip_install_first
 
+puts-step "About to source collectstatic"
+
 # Django collectstatic support.
 bpwatch start collectstatic
   source $BIN_DIR/steps/collectstatic
 bpwatch stop collectstatic
 
+puts-step "done sourcing collectstatic"
 # ### Finalize
 #
 
